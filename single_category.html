@@ -1,0 +1,129 @@
+<!-- templates/single_category.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f9;
+      padding: 40px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #0056b3;
+    }
+
+    .summary-block {
+      white-space: pre-wrap;
+      margin-top: 20px;
+      font-size: 16px;
+      line-height: 1.7;
+      color: #333;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 12px 20px;
+      background-color: #0077cc;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    .button:hover {
+      background-color: #005fa3;
+    }
+
+    .back, .select-cat {
+      margin-top: 25px;
+    }
+
+    select {
+      padding: 10px;
+      font-size: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    form {
+      display: inline;
+    }
+
+    #loading {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(255, 255, 255, 0.85);
+      text-align: center;
+      padding-top: 200px;
+      font-size: 22px;
+      color: #0077cc;
+    }
+
+    .spinner {
+      margin: 20px auto;
+      width: 40px;
+      height: 40px;
+      border: 4px solid #0077cc;
+      border-top: 4px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div id="loading">
+    🔄 Generating summary... Please wait
+    <div class="spinner"></div>
+  </div>
+
+  <div class="container">
+    <h1>📦 {{ title }}</h1>
+
+    <div class="select-cat">
+      <form method="POST" action="{{ url_for('select_category') }}">
+        <label for="category">🔍 View another category:</label>
+        <select name="category" id="category" onchange="this.form.submit()">
+          {% for cat in category_names %}
+            <option value="{{ cat }}" {% if cat == category %}selected{% endif %}>{{ category_names[cat] }}</option>
+          {% endfor %}
+        </select>
+      </form>
+    </div>
+
+    <div class="summary-block">
+      {{ summary }}
+    </div>
+
+    <a href="{{ url_for('download_file', filename=category + '.pdf') }}" class="button" download>
+      📥 Download Summary as PDF
+    </a>
+
+    <div class="back">
+      <a href="/" class="button">⬅️ Back to Upload</a>
+    </div>
+  </div>
+</body>
+</html>
